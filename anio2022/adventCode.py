@@ -174,6 +174,13 @@ def puzzle6_2(input, days):
     print("The solution of puzzle {} is: {}".format(days, result+14))
 
 
+def puzzle7_1(input, days):
+    print(input[:10])
+
+def puzzle7_2(input, days):
+    print(input[:10])
+
+
 def error(input):
     print("Error en el llamado de la función")
 
@@ -186,7 +193,7 @@ def launch_puzzle(days, input):
         "4-1":puzzle4_1, "4-2":puzzle4_2,
         "5-1":puzzle5_1, "5-2":puzzle5_2,
         "6-1":puzzle6_1, "6-2":puzzle6_2,
-        # "7-1":puzzle7_1, "7-2":puzzle7_2,
+        "7-1":puzzle7_1, "7-2":puzzle7_2,
         # "8-1":puzzle8_1, "8-2":puzzle8_2,
         # "9-1":puzzle9_1, "9-2":puzzle9_2,
         # "10-1":puzzle10_1, "10-2":puzzle10_2,

@@ -8,7 +8,7 @@ import os, requests
 from collections import Counter
 import re
 from math import floor,ceil
-import memory_profiler as mem
+# import memory_profiler as mem
 
 path = 'D:\\ScripPython\\AdventCode'
 os.chdir(path)
