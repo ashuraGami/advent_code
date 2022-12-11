@@ -1,5 +1,5 @@
 from commons import *
-
+from collections import defaultdict
 
 def puzzle1_1(input, days):
     input = ",".join(input)
@@ -175,7 +175,49 @@ def puzzle6_2(input, days):
 
 
 def puzzle7_1(input, days):
-    print(input[:10])
+    max_size = 100000
+    prefix = ""
+    roots = []
+    sizes = {}
+    tree = defaultdict(list)
+    for i in input:
+        if i[0] == '$': #and i != '$ ls':
+            if i != '$ ls':
+                head = i.replace('$ cd ', '')
+
+                if i == '$ cd ..': 
+                    roots.pop()
+                    prefix = "".join(roots)
+                else:
+                    roots.append(head)
+                    prefix += head
+                    tree[prefix] = []
+        else:
+            content = tree[prefix]
+            content.append(prefix+i.split(' ')[1])
+            tree[prefix] = content
+            if i[:3] != 'dir':
+                sizes[prefix+i.split(' ')[1]] = int(i.split(' ')[0])
+
+    treeSizes = defaultdict(list)
+    def sizeCalculation(size, head):
+        if head in sizes.keys():
+            return sizes[head]
+        
+        for i in tree[head]:
+            size += sizeCalculation(0, i)
+            treeSizes[head] = size
+        
+        return size
+
+    sizeCalculation(0, '/')
+
+    result = 0
+    for i in treeSizes.values():
+        if i <= max_size:
+            result += i
+
+    print("The solution of puzzle {} is: {}".format(days, result))
 
 def puzzle7_2(input, days):
     print(input[:10])

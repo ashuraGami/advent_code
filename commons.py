@@ -19,12 +19,9 @@ def getInput(advent_year, advent_day, path, nro):
 
 
 def inputList(advent_year, advent_day, path, nro):
-    f = open("{}/anio{}/input_day_{}_{}.txt".format(path, advent_year, advent_day, nro),'r')
-    _input = f.readlines()
-    f.close()
-    inputToList = []
-    for e in _input:
-        inputToList.append(e[:-1])
+    inputToList = open("{}/anio{}/input_day_{}_{}.txt".format(path, advent_year, advent_day, nro),'r')\
+                    .read()\
+                    .splitlines()
     return inputToList
 
 
