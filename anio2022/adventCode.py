@@ -1,5 +1,4 @@
 from commons import *
-from collections import defaultdict
 
 def puzzle1_1(input, days):
     input = ",".join(input)
@@ -176,41 +175,8 @@ def puzzle6_2(input, days):
 
 def puzzle7_1(input, days):
     max_size = 100000
-    prefix = ""
-    roots = []
-    sizes = {}
-    tree = defaultdict(list)
-    for i in input:
-        if i[0] == '$': #and i != '$ ls':
-            if i != '$ ls':
-                head = i.replace('$ cd ', '')
 
-                if i == '$ cd ..': 
-                    roots.pop()
-                    prefix = "".join(roots)
-                else:
-                    roots.append(head)
-                    prefix += head
-                    tree[prefix] = []
-        else:
-            content = tree[prefix]
-            content.append(prefix+i.split(' ')[1])
-            tree[prefix] = content
-            if i[:3] != 'dir':
-                sizes[prefix+i.split(' ')[1]] = int(i.split(' ')[0])
-
-    treeSizes = defaultdict(list)
-    def sizeCalculation(size, head):
-        if head in sizes.keys():
-            return sizes[head]
-        
-        for i in tree[head]:
-            size += sizeCalculation(0, i)
-            treeSizes[head] = size
-        
-        return size
-
-    sizeCalculation(0, '/')
+    treeSizes = calculationPuzzleDay7(input)
 
     result = 0
     for i in treeSizes.values():
@@ -220,6 +186,54 @@ def puzzle7_1(input, days):
     print("The solution of puzzle {} is: {}".format(days, result))
 
 def puzzle7_2(input, days):
+    totalSize = 70000000
+    needed = 30000000
+
+    treeSizes = calculationPuzzleDay7(input)
+
+    avaible = totalSize - treeSizes['/']
+    sizeToDelete = needed - avaible
+    result = 99999999999
+    for i in treeSizes.values():
+        if (i < result and i >= sizeToDelete):
+            result = i
+        
+    print("The solution of puzzle {} is: {}".format(days, result))
+
+
+def puzzle8_1(input, days):
+    side = len(input[0])
+    area = side ** 2
+    input = [list(x) for x in input]
+
+    c = 0
+    for i in range(1, side-1):
+        for j in range(1, side-1):
+            element = input[i][j]
+            flg = isVisible(i, j, element, side, input)
+            if flg == False:
+                c += 1
+
+    print("The solution of puzzle {} is: {}".format(days, area - c))
+
+def puzzle8_2(input, days):
+    side = len(input[0])
+    input = [list(x) for x in input]
+
+    result = 0
+    for i in range(1, side-1):
+        for j in range(1, side-1):
+            element = input[i][j]
+            scr = score(i, j, element, side, input)
+            result = max(result, scr)
+
+    print("The solution of puzzle {} is: {}".format(days, result))
+
+
+def puzzle9_1(input, days):
+    print(input[:10])
+
+def puzzle9_2(input, days):
     print(input[:10])
 
 
@@ -236,8 +250,8 @@ def launch_puzzle(days, input):
         "5-1":puzzle5_1, "5-2":puzzle5_2,
         "6-1":puzzle6_1, "6-2":puzzle6_2,
         "7-1":puzzle7_1, "7-2":puzzle7_2,
-        # "8-1":puzzle8_1, "8-2":puzzle8_2,
-        # "9-1":puzzle9_1, "9-2":puzzle9_2,
+        "8-1":puzzle8_1, "8-2":puzzle8_2,
+        "9-1":puzzle9_1, "9-2":puzzle9_2,
         # "10-1":puzzle10_1, "10-2":puzzle10_2,
         # "11-1":puzzle11_1, "11-2":puzzle11_2,
         # "12-1":puzzle12_1, "12-2":puzzle12_2,

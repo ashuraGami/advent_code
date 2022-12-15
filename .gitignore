@@ -1,6 +1,8 @@
+__pycache__/
 .vscode/*
 *.pyc
 *.ini
 *.env
 *.json
 /.idea
+test.py

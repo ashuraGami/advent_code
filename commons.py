@@ -1,6 +1,7 @@
 import  os, sys
 import requests
 import string
+from collections import defaultdict
 
 def get_current_path():
     path = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -88,3 +89,139 @@ def getClearStructure(input):
     moves = [x.split('|') for x in moves]
 
     return stacks, moves
+
+
+def calculationPuzzleDay7(input):
+    prefix = ""
+    roots = []
+    sizes = {}
+    tree = defaultdict(list)
+    for i in input:
+        if i[0] == '$':
+            if i != '$ ls':
+                head = i.replace('$ cd ', '')
+
+                if i == '$ cd ..': 
+                    roots.pop()
+                    prefix = "".join(roots)
+                else:
+                    roots.append(head)
+                    prefix += head
+                    tree[prefix] = []
+        else:
+            content = tree[prefix]
+            content.append(prefix+i.split(' ')[1])
+            tree[prefix] = content
+            if i[:3] != 'dir':
+                sizes[prefix+i.split(' ')[1]] = int(i.split(' ')[0])
+
+    treeSizes = defaultdict(list)
+    def sizeCalculation(size, head):
+        if head in sizes.keys():
+            return sizes[head]
+        
+        for i in tree[head]:
+            size += sizeCalculation(0, i)
+            treeSizes[head] = size
+        
+        return size
+
+    sizeCalculation(0, '/')
+
+    return treeSizes
+
+
+def isVisible(i, j, element, side, input):
+    flg = True
+    for x_pos in sorted(range(i), reverse=True):
+        if input[x_pos][j] >= element:
+            flg = False
+            break
+    if flg == True:
+        return flg
+    
+    flg = True
+    for y_neg in sorted(range(j), reverse=True):
+        if input[i][y_neg] >= element:
+            flg = False
+            break
+    if flg == True:
+        return flg
+
+    flg = True
+    for x_neg in range(i+1, side):
+        if input[x_neg][j] >= element:
+            flg = False
+            break
+    if flg == True:
+        return flg
+    
+    flg = True
+    for y_pos in range(j+1, side):
+        if input[i][y_pos] >= element:
+            flg = False
+            break
+    
+    return flg
+
+
+def score(i, j, element, side):
+    up, down, left, right = 0, 0, 0, 0
+    for x_pos in sorted(range(i), reverse=True):
+        print('up ', input[x_pos][j])
+        if input[x_pos][j] <= element:
+            up += 1
+    
+    for y_neg in sorted(range(j), reverse=True):
+        print('left ', input[i][y_neg])
+        if input[i][y_neg] <= element:
+            left += 1
+
+    for x_neg in range(i+1, side):
+        print('down ', input[x_neg][j])
+        if input[x_neg][j] <= element:
+            down += 1
+    
+    for y_pos in range(j+1, side):
+        print('right ', input[i][y_pos])
+        if input[i][y_pos] <= element:
+            right += 1
+    
+    return up + down + left + right
+
+
+def score(i, j, element, side, input):
+    score, z = 1, 0
+    for x_pos in sorted(range(i), reverse=True):
+        if input[x_pos][j] < element:
+            z += 1
+        else:
+            z += 1;break
+    
+    score *= z
+    z = 0
+    for y_neg in sorted(range(j), reverse=True):
+        if input[i][y_neg] < element:
+            z += 1
+        else:
+            z += 1;break
+    
+    score *= z
+    z = 0
+    for x_neg in range(i+1, side):
+        if input[x_neg][j] < element:
+            z += 1
+        else:
+            z += 1;break
+    
+    score *= z
+    z = 0
+    for y_pos in range(j+1, side):
+        if input[i][y_pos] < element:
+            z += 1
+        else:
+            z += 1;break
+    
+    score *= z
+
+    return score
